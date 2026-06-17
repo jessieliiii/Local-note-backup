@@ -108,8 +108,8 @@ main() {
   # 2. Backup target
   echo ""
   echo "Step 2: Backup target"
-  echo "  1) GitHub repository (remote)"
-  echo "  2) Obsidian vault (local)"
+  echo "  1) GitHub repository (remote)  [recommended for version control — full history, diff, revert]"
+  echo "  2) Obsidian vault (local)       [convenient local mirror, no version history]"
   echo "  3) Both"
   echo ""
   local target_choice
