@@ -4,6 +4,8 @@ Backs up a local notes directory (primarily Markdown) to a **GitHub repository**
 
 Each backup can either create a timestamped snapshot folder (`2026-06-17_14-30/`) or overwrite the previous backup in place.
 
+> **Recommendation:** If you want proper version control — the ability to diff changes, revert to any past state, and see exactly what changed between backups — use **GitHub** as your backup target. Every backup becomes a git commit, giving you a full history of your notes over time. The Obsidian vault option is best suited as a convenient local mirror for quick access, not as a version control solution.
+
 ---
 
 ## Dependencies
