@@ -18,8 +18,26 @@ log() {
   fi
 }
 
+notify_error() {
+  local msg="$1"
+  local hint="$2"
+  osascript -e "display notification \"$msg\n$hint\" with title \"Note Backup Failed\" subtitle \"Check log: $LOG_FILE\" sound name \"Basso\"" 2>/dev/null || true
+}
+
 die() {
   log "ERROR: $*"
+  # Map common errors to actionable hints
+  local hint=""
+  case "$*" in
+    *"git clone failed"*)      hint="Check your repo URL and SSH key (ssh -T git@github.com)." ;;
+    *"git pull failed"*)       hint="A rebase conflict may need manual resolution in: $GITHUB_STAGING_DIR" ;;
+    *"git push failed"*)       hint="Check your SSH key or network. Try: git -C \"$GITHUB_STAGING_DIR\" push" ;;
+    *"Config not found"*)      hint="Run ./setup.sh to create the config." ;;
+    *"Source directory"*)      hint="Update SOURCE_DIR in $CONFIG_FILE." ;;
+    *"Obsidian vault"*)        hint="Check OBSIDIAN_VAULT_DIR in $CONFIG_FILE." ;;
+    *)                         hint="See full log at $LOG_FILE" ;;
+  esac
+  notify_error "$*" "$hint"
   exit 1
 }
 
