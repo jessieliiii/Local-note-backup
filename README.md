@@ -59,8 +59,9 @@ tail -f ~/.local/share/note-backup/backup.log
 ## Other Commands
 
 ```bash
-./install.sh      # reinstall or reload the launchd job after config changes
-./uninstall.sh    # stop the scheduler and optionally remove config
+./backup.sh --status    # show current config and scheduler state
+./install.sh            # reinstall or reload the launchd job after config changes
+./uninstall.sh          # stop the scheduler and optionally remove config
 ```
 
 To change a setting without re-running the full wizard, edit `~/.config/note-backup/config` directly, then run `./install.sh`.
