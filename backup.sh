@@ -105,7 +105,45 @@ backup_obsidian() {
   fi
 }
 
+show_status() {
+  if [[ ! -f "$CONFIG_FILE" ]]; then
+    echo "No config found at $CONFIG_FILE. Run ./setup.sh first."
+    exit 1
+  fi
+
+  # shellcheck source=/dev/null
+  source "$CONFIG_FILE"
+  BACKUP_MODE="${BACKUP_MODE:-timestamp}"
+
+  echo ""
+  echo "===== Note Backup Status ====="
+  echo "  Source dir   : ${SOURCE_DIR:-not set}"
+  echo "  Target       : ${BACKUP_TARGET:-not set}"
+  echo "  Mode         : ${BACKUP_MODE}"
+  echo "  Cadence      : ${CADENCE:-not set}${CADENCE_HOUR:+ at ${CADENCE_HOUR}:00}"
+  if [[ "${BACKUP_TARGET}" == "github" || "${BACKUP_TARGET}" == "both" ]]; then
+    echo "  GitHub repo  : ${GITHUB_REPO_URL:-not set}"
+    echo "  Staging dir  : ${GITHUB_STAGING_DIR:-not set}"
+  fi
+  if [[ "${BACKUP_TARGET}" == "obsidian" || "${BACKUP_TARGET}" == "both" ]]; then
+    echo "  Obsidian vault: ${OBSIDIAN_VAULT_DIR:-not set}"
+  fi
+  echo ""
+  echo "  Scheduler    : $(launchctl list com.notebackup &>/dev/null && echo "active" || echo "not loaded")"
+  echo "  Log          : $LOG_FILE"
+  if [[ -f "$LOG_FILE" ]]; then
+    echo ""
+    echo "  Last entry   : $(tail -1 "$LOG_FILE")"
+  fi
+  echo ""
+  exit 0
+}
+
 main() {
+  if [[ "${1:-}" == "--status" ]]; then
+    show_status
+  fi
+
   if [[ ! -f "$CONFIG_FILE" ]]; then
     die "Config not found at $CONFIG_FILE. Run ./setup.sh first."
   fi
