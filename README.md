@@ -83,6 +83,7 @@ Timestamped mode grows storage over time. Overwrite mode keeps only the latest s
 
 - **macOS only.** launchd is not available on Linux or Windows.
 - **Machine must be awake.** launchd will not run scheduled jobs while the laptop is asleep. Calendar-interval jobs (daily/weekly) catch up on the next wake; interval-based jobs (hourly/every 6h) silently skip missed runs.
+- **Full Disk Access required for scheduled runs.** macOS may block `/bin/bash` from accessing your files when launched via launchd, even if manual runs work fine. If you see `Operation not permitted` in the log, go to **System Settings → Privacy & Security → Full Disk Access** and add `/bin/bash`. Then reload the job: `launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.notebackup.plist && launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.notebackup.plist`.
 - **GitHub target requires a pre-existing remote repo.** The tool clones it on first run but will not create it for you.
 - **SSH key must be configured** for the GitHub remote. HTTPS remotes will hang waiting for credentials during unattended runs.
 - **Obsidian overwrite mode is append-only.** Files deleted from your source directory are not removed from the vault. This is intentional to prevent accidental data loss, but the vault will accumulate stale files.
